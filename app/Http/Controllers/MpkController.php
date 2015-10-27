@@ -1,5 +1,8 @@
 <?php namespace App\Http\Controllers;
 
+use App\Departure;
+use App\Stop;
+
 class MpkController extends Controller {
 
 	/*
@@ -30,43 +33,10 @@ class MpkController extends Controller {
 	 */
 	public function index()
 	{
-		$url = 'http://rozklady.mpk.krakow.pl/linie.aspx';
-		$doc = new \DOMDocument();
-		$xhtml = file_get_contents($url);
-		$html = preg_replace("/<!DOCTYPE html(.+?)>/", '<!DOCTYPE html>', $xhtml);
-		$html = str_replace("\r\n", "*^", $html);
-		$html = preg_replace("/<HEAD>(.+?)<\/HEAD>/", '<HEAD></HEAD>', $html);
-		$html = str_replace("*^", "\r\n", $html);
-		// dd($html);
-		libxml_use_internal_errors(true);
-		$doc->loadHTML($html);
-		// echo $doc->saveHTML();
-		// $html = str_get_html($html);
-		$tables = $doc->getElementsByTagName('table');
-		$items = [];
-		for($i = 0 ;$i< $tables->length;$i++)
-		{
-			if($tables->item($i)->getAttribute('width')=='80%')
-				break;
-			$items[$i]['header']  = trim($tables->item($i)->childNodes->item(0)->childNodes->item(0)->nodeValue);
-			if(!empty( $tables->item($i)->childNodes->item(1)))
-			{
-				$item = $tables->item($i)->childNodes->item(1)->childNodes->item(0);
-				$links = $item->childNodes;
-				$items[$i]['item']  = [];
-				for($j = 0;$j<$links->length;$j++)
-				{
-					if($links->item($j)->nodeName == "a")
-					{
-						$a['name'] = $links->item($j)->nodeValue;
-						$a['src']	=  $links->item($j)->getAttribute('href');
-						$items[$i]['item'][] = $a;
-						
-					}
-				}
-			}
-		}
-		dd($items);
+		$url = 'http://rozklady.mpk.krakow.pl/aktualne/0001/0001w001.htm';
+
+		$out = Stop::import($url,0,0,0);
+		dd($out);
 		return view('index');
 	}
 
