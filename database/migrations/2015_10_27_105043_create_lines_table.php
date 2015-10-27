@@ -16,9 +16,11 @@ class CreateLinesTable extends Migration {
 		{
 			$table->increments('lineID');
 			$table->text('name');
+			$table->text('start');
+			$table->text('end');
+			$table->text('link1');
+			$table->text('link2');
 			$table->integer('cityID');
-			$table->integer('typeID');
-			$table->timestamps();
 		});
 	}
 

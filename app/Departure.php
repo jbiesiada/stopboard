@@ -39,7 +39,7 @@ class Departure extends Model {
 					{
 						$departureClone = clone $departures[$j];
 						$departureClone->minute = $time;
-						// $departureClone->save();
+						$departureClone->save();
 						$departuresall[] = $departureClone;
 					}
 				}

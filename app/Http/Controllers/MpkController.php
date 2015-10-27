@@ -1,20 +1,10 @@
 <?php namespace App\Http\Controllers;
 
 use App\Departure;
-use App\Stop;
+use App\Line;
+use App\City;
 
 class MpkController extends Controller {
-
-	/*
-	|--------------------------------------------------------------------------
-	| Welcome Controller
-	|--------------------------------------------------------------------------
-	|
-	| This controller renders the "marketing page" for the application and
-	| is configured to only allow guests. Like most of the other sample
-	| controllers, you are free to modify or remove it as you desire.
-	|
-	*/
 
 	/**
 	 * Create a new controller instance.
@@ -33,11 +23,13 @@ class MpkController extends Controller {
 	 */
 	public function index()
 	{
-		$url = 'http://rozklady.mpk.krakow.pl/aktualne/0001/0001w001.htm';
-
-		$out = Stop::import($url,0,0,0);
-		dd($out);
-		return view('index');
+		set_time_limit(120);
+		$city = City::first();
+		$out = Line::import($city);
+		$lines = Line::all();
+		foreach($lines as $line)
+			echo $line." ";
+		return "";
 	}
 
 }

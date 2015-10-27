@@ -12,3 +12,4 @@
 */
 
 Route::get('/', 'MpkController@index');
+Route::get('/import/{LineID}', 'MpkController@import');
