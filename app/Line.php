@@ -10,7 +10,7 @@ class Line extends Model {
 
 	public function __toString()
 	{
-		return "<a href='/import/".$this->lineID."'>".$this->lineID."</a>";
+		return "<a href='/import/".$this->lineID."'>".$this->name."</a>";
 	}
 	public static function import(City $city)
 	{

@@ -3,6 +3,7 @@
 use App\Departure;
 use App\Line;
 use App\City;
+use App\Stop;
 
 class MpkController extends Controller {
 
@@ -30,6 +31,19 @@ class MpkController extends Controller {
 		foreach($lines as $line)
 			echo $line." ";
 		return "";
+	}
+	public function import($lineID)
+	{
+		$lines = Line::all();
+		foreach($lines as $line)
+		{
+			echo $line." ";
+		}
+
+		$line = Line::find($lineID);
+		echo "<br><br>".$line;
+		dd(Stop::fullImport($line));
+		return "";	
 	}
 
 }
