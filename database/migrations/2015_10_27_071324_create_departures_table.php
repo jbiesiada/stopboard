@@ -21,7 +21,8 @@ class CreateDeparturesTable extends Migration {
 			$table->integer('dayType');
 			$table->integer('lineID');
 			$table->integer('stopID');
-			$table->integer('cityID');			
+			$table->integer('cityID');
+			$table->timestamps();		
 		});
 	}
 

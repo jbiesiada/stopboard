@@ -1,15 +1,9 @@
 <?php
 
-/*
-|--------------------------------------------------------------------------
-| Application Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register all of the routes for an application.
-| It's a breeze. Simply tell Laravel the URIs it should respond to
-| and give it the controller to call when that URI is requested.
-|
-*/
-
 Route::get('/', 'MpkController@index');
-Route::get('/import/{LineID}', 'MpkController@import');
+Route::get('/import/{cityID}', 'MpkController@import');
+Route::get('/getline/{LineID}', 'MpkController@importLine');
+Route::get('/getlines/{cityID}', 'MpkController@getLines');
+Route::get('/getstops/{cityID}', 'MpkController@getStops');
+Route::get('/getdeps/{stopID}/{dateint}', 'MpkController@getDeps');
+Route::get('/getcities', 'MpkController@getCities');

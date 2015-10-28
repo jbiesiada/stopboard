@@ -21,6 +21,7 @@ class CreateLinesTable extends Migration {
 			$table->text('link1');
 			$table->text('link2');
 			$table->integer('cityID');
+			$table->timestamps();
 		});
 	}
 

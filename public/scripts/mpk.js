@@ -1,43 +1,70 @@
-var cities = [
-	{id:0,name:'Poznań'},
-	{id:1,name:'Kraków'},
-	{id:2,name:'Warszawa'},
-	{id:3,name:'Gdańsk'}
-];
-var lines = [
-	{id:0,	type:'Tram',	number:1	},
-	{id:1,	type:'Tram',	number:2	},
-	{id:2,	type:'Tram',	number:3	},
-	{id:3,	type:'Tram',	number:4	},
-	{id:4,	type:'Bus',		number:61	},
-	{id:5,	type:'Bus',		number:71	},
-	{id:6,	type:'Bus',		number:81	},
-	{id:7,	type:'Bus',		number:91	}
-];
-var stops = [
-	{id:0,name}
-];
-var types = [{name:'Trams',type:'Tram'},{name:'Buses',type:'Bus'}];
 var app = angular.module('mpkApp', []);
+app.controller("CitiesListController",function($filter,$http){
+	var date = new Date();
+	console.log(date);
 
-app.controller("CitiesListController",function(){
 	var CitiesList = this;
-	CitiesList.cityId = 0;
-
-	CitiesList.cities = cities;
+	CitiesList.city = {};
+	CitiesList.stop = {};
+	CitiesList.cities = [];
+	CitiesList.date = new Date();
+	CitiesList.stops = [];
+	CitiesList.deps = [];
+	$http.get("/getcities").success(function(response){
+		CitiesList.cities = response;
+		CitiesList.city = response[0];
+		$http.get("/getstops/"+response[0].cityID).success(function(response){
+			CitiesList.stops = response;
+		});
+	});
 	this.selectCity = function(key){
-		CitiesList.cityId = key;
+		$http.get("/getstops/"+key).success(function(response){
+			CitiesList.stops = response;
+		});
+		CitiesList.city = $filter('filter')(CitiesList.cities, function (d) {return d.cityID === key;})[0];
 	};
 	this.isSelected = function(key){
-		return CitiesList.cityId === key;
+		return CitiesList.city.cityID === key;
 	};
-	this.getCity = function(key){
-		return CitiesList.cities[key];
+	this.update = function(key){
+		CitiesList.date = new Date();
+		CitiesList.stop = $filter('filter')(CitiesList.stops, function (d) {return d.stopID === key;})[0];
+		$http.get("/getdeps/"+CitiesList.stop.stopID+"/"+Math.floor( CitiesList.date.getTime()/1000)).success(function(response){
+			CitiesList.deps = response;
+		});
 	};
 });
 
-app.controller("LinesListController",function(){
-	var LinesList = this;
-	LinesList.lines = lines;
-	LinesList.types = types;
+
+app.controller("importController",function($http){
+	var importer = this;
+	importer.line = {};
+	importer.cities = [];
+	importer.ready = false;
+	importer.percent = 0;
+	var counter = 0;
+	importer.lines = [];
+	$http.get("/getcities").success(function(response){
+		importer.cities = response;
+		importer.cityId = response[0].cityID;
+		$http.get("/getlines/"+importer.cityId).success(function(response){
+			importer.lines = response;
+			importer.ready = true;
+		});
+	});
+
+	importer.importStart = function(){
+		counter = 0;
+		for(l in importer.lines)
+		{
+			$http.get("/getline/"+importer.lines[l].lineID).success(function(response){
+				importer.line = importer.lines[l];
+				counter++;
+				importer.percent = 100*counter/importer.lines.length;
+			});				
+		}
+	};
+
+
+
 });

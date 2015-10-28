@@ -6,11 +6,10 @@ use App\Stop;
 class Line extends Model {
 	protected $table = 'lines';
 	protected $primaryKey = 'lineID';
-	public $timestamps = false;
 
 	public function __toString()
 	{
-		return "<a href='/import/".$this->lineID."'>".$this->name."</a>";
+		return "<a href='/import/".$this->lineID."'>".$this->lineID."</a>";
 	}
 	public static function import(City $city)
 	{

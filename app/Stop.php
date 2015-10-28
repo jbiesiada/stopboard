@@ -6,7 +6,6 @@ use App\Departure;
 class Stop extends Model {
 	protected $table = 'stops';
 	protected $primaryKey = 'stopID';
-	public $timestamps = false;
 
 	public static function fullImport(Line $line)
 	{
@@ -35,13 +34,17 @@ class Stop extends Model {
 	{
 		$stop = self::where('name','=',$name)->where('cityID','=',$CityID)->first();
 		if($stop)
+		{
+			// dd($stop);
 			return $stop;
+		}
 		else 
 		{
 			$stop = new self();
 			$stop->name = $name;
 			$stop->cityID = $CityID;
 			$stop->save(); 
+			// dd($stop);
 			return  $stop;
 		}
 	}

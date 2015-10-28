@@ -17,6 +17,7 @@ class CreateStopsTable extends Migration {
 			$table->increments('stopID');
 			$table->text('name');
 			$table->integer('cityID');
+			$table->timestamps();
 		});
 	}
 
