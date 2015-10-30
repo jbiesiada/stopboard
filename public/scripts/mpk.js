@@ -1,5 +1,5 @@
 var app = angular.module('mpkApp', []);
-app.controller("CitiesListController",function($filter,$http){
+app.controller("CitiesListController",function($filter,$http,$scope,$interval){
 	var date = new Date();
 	var CitiesList = this;
 	CitiesList.city = {};
