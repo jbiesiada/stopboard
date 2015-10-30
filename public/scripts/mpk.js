@@ -3,6 +3,7 @@ app.controller("CitiesListController",function($filter,$http){
 	var date = new Date();
 	var CitiesList = this;
 	CitiesList.city = {};
+	CitiesList.showresults = false;
 	CitiesList.stop = {};
 	CitiesList.cities = [];
 	CitiesList.date = new Date();
@@ -27,7 +28,9 @@ app.controller("CitiesListController",function($filter,$http){
 	this.update = function(key){
 		CitiesList.date = new Date();
 		CitiesList.stop = $filter('filter')(CitiesList.stops, function (d) {return d.stopID === key;})[0];
+		CitiesList.showresults = false;
 		$http.get("/getdeps/"+CitiesList.stop.stopID+"/"+Math.floor( CitiesList.date.getTime()/1000)).success(function(response){
+			CitiesList.showresults = true;
 			CitiesList.deps = response;
 		});
 	};

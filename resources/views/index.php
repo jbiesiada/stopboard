@@ -11,17 +11,35 @@
 <body>
 <div class="container-fluid" ng-controller="CitiesListController as cityList">
   	<div class="row" ng-controller="importController as import">
-		<div class="col-xs-4" ng-hide='import.ready'>
-			<H3>{{cityList.city.name}}<span ng-show="cityList.stop.name"> - {{cityList.stop.name}}</span></H3>
-			<select class="form-control"  ng-model='stop' ng-change="cityList.update(stop)">
-			<option ng-repeat="stop in cityList.stops" value="{{stop.stopID}}"> {{stop.name}} </option>				
-			</select>
-		</div>
-		<div class="col-xs-8" ng-hide='import.ready'>
-			<span>{{cityList.date | date:'yyyy-MM-dd hh:mm:ss'}}</span>
-			<div>
-				<p ng-repeat="dep in cityList.deps">{{dep.lineName}} | {{dep.lineEnd}} | {{dep.when}} ({{ dep.hour}}:{{dep.minute}})</p>
+		<div class="col-xs-3" ng-hide='import.ready'>
+			<h3>{{cityList.city.name}}</h3>
+			<div class="form-group">				
+				<select class="form-control"  ng-model='stop' ng-change="cityList.update(stop)" id =  "stopsList">
+				<option ng-repeat="stop in cityList.stops" value="{{stop.stopID}}"> {{stop.name}} </option>				
+				</select>
 			</div>
+		</div>
+		<div class="col-xs-6" ng-hide='import.ready'>
+			<h3>{{cityList.date | date:'yyyy-MM-dd hh:mm:ss'}}</h3>
+			<p ng-show="cityList.stop.name">Przystanek - {{cityList.stop.name}}: <span ng-hide = 'cityList.showresults' class="glyphicon glyphicon-refresh glyphicon-refresh-animate"></span></p>
+			<table ng-show='cityList.showresults' class="table table-striped">
+				<thead>
+					<tr>
+						<th>Linia</th>
+						<th>Przystanek końcowy</th>
+						<th>odjazd za (min)</th>
+						<th>godzina odjazdu</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr ng-repeat="dep in cityList.deps">
+						<td>{{dep.lineName}}</td>
+						<td>{{dep.lineEnd}}</td>
+						<td>{{dep.when}}</td>
+						<td>{{ dep.hour}}:{{dep.minute}}</td>
+					</tr>
+				</tbody>
+			</table>
 		</div>
 		<div class="col-xs-8" ng-show='import.ready'>
 			<div role="alert" ng-class="{alert:true, 'alert-info':!import.deleted, 'alert-success':import.deleted}" ng-show = 'import.deleting'>

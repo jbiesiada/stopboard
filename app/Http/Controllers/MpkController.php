@@ -98,7 +98,7 @@ class MpkController extends Controller {
 			}
 		}
 		Departure::truncate();
-		// Line::truncate();
+		Line::truncate();
 		Stop::truncate();
 		return json_encode("ok");
 	}
