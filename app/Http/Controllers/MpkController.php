@@ -28,6 +28,10 @@ class MpkController extends Controller {
 	}
 	public function import($cityID)
 	{
+		$lines = Line::where('cityID','=',$cityID)->orderBy('name')->get();
+		if(!empty($lines))
+			return json_encode($lines);
+		date_default_timezone_set("CET");
 		$city = City::find($cityID);
 		$line = Line::import($city);
 		return json_encode($line);	
@@ -62,9 +66,41 @@ class MpkController extends Controller {
 	}
 	public function importLine($lineID)
 	{
+		date_default_timezone_set("CET");
 		$line = Line::find($lineID);
 		$stops = Stop::fullImport($line);
 		return json_encode($stops);
+	}
+	public function getcreated()
+	{
+		date_default_timezone_set("CET");
+		$line = Stop::first();
+		if($line)
+		{
+			$dbcreated = $line->created_at;
+			$now = time();
+			$when =  ($now-$dbcreated->timestamp)/(60*60);
+			// return $when;
+			if($when<24)
+				return json_encode(null);
+		}
+		return json_encode("import");
+	}
+	public function truncateTables()
+	{
+		$cities = City::get();
+		foreach($cities as $city)
+		{
+			$lines = Line::where('cityID','=',$city->cityID)->get();
+			foreach($lines as $line)
+			{
+				$value = \Cache::put('stop_links'.$line->lineID.'_'.$city->cityID,[],30);
+			}
+		}
+		Departure::truncate();
+		// Line::truncate();
+		Stop::truncate();
+		return json_encode("ok");
 	}
 
 }

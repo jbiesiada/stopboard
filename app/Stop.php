@@ -17,16 +17,21 @@ class Stop extends Model {
 	}
 	public static function import($url,$dir,$LineID,$CityID)
 	{
+		$stop_links = \Cache::get('stop_links'.$LineID.'_'.$CityID);
+		if(empty($stop_links))
+			$stop_links = [];
 		if(!$url)
 			return [];
 		$stops = [];
 		$client = new Client();
 		$crawler = $client->request('GET', $url);
-		$crawler->filter('a[target="R"]')->each(function($link,$k) use (&$stops,$dir,$LineID,$CityID){
+		$crawler->filter('a[target="R"]')->each(function($link,$k) use (&$stops,&$stop_links,$dir,$LineID,$CityID){
 			$stop = self::getExistedOrNew(trim($link->text()),$CityID);
+			$stop_links[$stop->stopID][$dir] = $link->link()->getUri();
 			$stop->deps = Departure::import($link->link()->getUri(),$dir,$stop->stopID, $LineID,$CityID);
 			$stops[] = $stop;
 		});		
+		\Cache::put('stop_links'.$LineID.'_'.$CityID,$stop_links,30);
 		return $stops;
 	}
 

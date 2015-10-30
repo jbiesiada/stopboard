@@ -30,14 +30,7 @@ class Line extends Model {
 				if(!empty($dirs[1]))
 					$lineModel->link2 = $dirs[1];
 				$lineModel->save();
-				// foreach(self::getStopsLinks($line->link()->getUri()) as $dir => $url)
-				// {
-				// 	$dirs[$dir] = Stop::import($url,$dir,$lineModel->lineID,$city->cityID);
-				// }
-				// $lineModel->dirs = $dirs;
-				// dd($lineModel);
 				$lines[] = $lineModel;
-				// $lines[] = self::getEnds($dirs[0]);
 			}
 		});
 		return $lines;
