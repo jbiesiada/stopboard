@@ -20,7 +20,7 @@
 				</select>
 			</div>
 		</div>
-		<div class="col-xs-6" ng-hide='import.ready'>
+		<div class="col-xs-8 col-md-6" ng-hide='import.ready'>
 			<h3 ng-show="cityList.stop.name">Przystanek - {{cityList.stop.name}}: <span ng-hide = 'cityList.showresults' class="glyphicon glyphicon-refresh glyphicon-refresh-animate"></span></h3>
 			<h5 ng-show='cityList.showresults'>{{cityList.date | date:'yyyy-MM-dd hh:mm:ss'}}</h5>
 			<table ng-show='cityList.showresults' class="table table-striped">

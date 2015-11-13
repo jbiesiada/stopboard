@@ -29,7 +29,7 @@ class MpkController extends Controller {
 	public function import($cityID)
 	{
 		$lines = Line::where('cityID','=',$cityID)->orderBy('name')->get();
-		if(!empty($lines))
+		if(!empty($lines[0]))
 			return json_encode($lines);
 		date_default_timezone_set("CET");
 		$city = City::find($cityID);
