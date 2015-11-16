@@ -4,6 +4,7 @@ use App\Departure;
 use App\Line;
 use App\City;
 use App\Stop;
+use \DateTime;
 
 class MpkController extends Controller {
 
@@ -14,24 +15,20 @@ class MpkController extends Controller {
 	 */
 	public function __construct()
 	{
+		date_default_timezone_set("CET");
 		$this->middleware('guest');
 	}
 
-	/**
-	 * Show the application welcome screen to the user.
-	 *
-	 * @return Response
-	 */
 	public function index()
 	{
+		$d = new DateTime;
 		return view('index');
 	}
 	public function import($cityID)
 	{
 		$lines = Line::where('cityID','=',$cityID)->orderBy('name')->get();
 		if(!empty($lines[0]))
-			return json_encode($lines);
-		date_default_timezone_set("CET");
+			return json_encode($lines);		
 		$city = City::find($cityID);
 		$line = Line::import($city);
 		return json_encode($line);	
@@ -43,7 +40,6 @@ class MpkController extends Controller {
 	}
 	public function getDeps($stopID,$time)
 	{	
-		date_default_timezone_set("CET");
 		$hour = (int) date('H',$time);
 		$minute = (int) date('i',$time);
 		$mixedtime = 60*$hour+$minute;
@@ -66,21 +62,18 @@ class MpkController extends Controller {
 	}
 	public function importLine($lineID)
 	{
-		date_default_timezone_set("CET");
 		$line = Line::find($lineID);
 		$stops = Stop::fullImport($line);
 		return json_encode($stops);
 	}
 	public function getcreated()
 	{
-		date_default_timezone_set("CET");
 		$line = Stop::first();
 		if($line)
 		{
 			$dbcreated = $line->created_at;
 			$now = time();
 			$when =  ($now-$dbcreated->timestamp)/(60*60);
-			// return $when;
 			if($when<24)
 				return json_encode(null);
 		}

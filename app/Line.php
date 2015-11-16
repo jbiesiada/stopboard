@@ -7,10 +7,6 @@ class Line extends Model {
 	protected $table = 'lines';
 	protected $primaryKey = 'lineID';
 
-	public function __toString()
-	{
-		return "<a href='/import/".$this->lineID."'>".$this->lineID."</a>";
-	}
 	public static function import(City $city)
 	{
 		if(!$city)
@@ -95,7 +91,6 @@ class Line extends Model {
 		$model = self::where('name','=',$name)->where('cityID','=',$CityID)->first();
 		if($model)
 		{
-			echo "exist";
 			return $model;
 		}
 		else 

@@ -25,8 +25,7 @@ class Departure extends Model {
 	}
 	public static function getLatest($stopID,$time)
 	{
-		date_default_timezone_set("CET");
-		$dayType = date('w',$time)== 7?2:date('w',$time)== 6?1:0;
+		$dayType = max(date('w',$time)-5,0);
 		$hour = (int) date('H',$time);
 		$minute = (int) date('i',$time);
 		$deps = self::where('stopID','=',$stopID)->where('dayType','=',$dayType)->where(function($query) use($hour,$minute)
