@@ -24,10 +24,6 @@ class MpkController extends Controller {
 	{	
 		return json_encode($stop->getLatest($time));
 	}
-	public function getLines($city)
-	{
-		return json_encode($city->lines);
-	}
 	public function getStops($city)
 	{
 		return json_encode($city->stops);
