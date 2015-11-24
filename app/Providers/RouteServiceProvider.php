@@ -24,7 +24,6 @@ class RouteServiceProvider extends ServiceProvider {
 	{
 		parent::boot($router);		
         $router->model('city','App\City');
-        $router->model('line','App\Line');
         $router->model('stop','App\Stop');
 
 		//
