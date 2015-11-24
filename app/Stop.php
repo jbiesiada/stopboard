@@ -3,9 +3,26 @@
 use Illuminate\Database\Eloquent\Model;
 use Goutte\Client;
 use App\Departure;
+use App\SelectedTime;
 class Stop extends Model {
 	protected $table = 'stops';
 	protected $primaryKey = 'stopID';
+
+	public function departures()
+	{
+		return $this->hasMany('App\Departure', 'stopID','stopID');
+	}
+
+	public function getLatest($time)
+	{	
+		$selectedTime = new SelectedTime($time);
+		$deps = $this->departures()->nearest($selectedTime)->get();
+		foreach($deps as &$d)
+		{
+			$d->addDesc($selectedTime);
+		}
+		return $deps;
+	}
 
 	public static function fullImport(Line $line)
 	{

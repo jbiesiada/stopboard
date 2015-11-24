@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Eloquent\Model;
 use Goutte\Client;
+use App\SelectedTime;
 class Departure extends Model {
 	protected $table = 'departures';
 	protected $primaryKey = 'departureID';
@@ -11,10 +12,22 @@ class Departure extends Model {
 	{
 		return $this->hasOne('App\Line', 'lineID','lineID');
 	}
-	public function when($mixedtime)
+	public function mixedTime()
 	{
-		$thismtime = $this->hour*60+$this->minute;
-		return $thismtime - $mixedtime;
+		return $this->hour*60+$this->minute;
+	}
+	public function addDesc($time)
+	{
+		$this->lineName = $this->line->name;
+		$this->lineEnd = $this->end();
+		$this->when = $time->when($this->mixedTime());
+	}
+	public function scopeNearest($query,$time)
+	{
+		$query->where('dayType','=',$time->dayType())->where(function($query) use($time)
+		{
+			$query->where('hour','=',$time->hour())->where('minute','>=',$time->minute())->orWhere('hour','>',$time->hour());
+		})->orderBy('hour')->orderBy('minute')->limit(5);	
 	}
 	public function end()
 	{
@@ -22,18 +35,6 @@ class Departure extends Model {
 		if($this->directory == 0)
 			return $line->end;
 		return $line->start;
-	}
-	public static function getLatest($stopID,$time)
-	{
-		$dayType = max(date('w',$time)-5,0);
-		$hour = (int) date('H',$time);
-		$minute = (int) date('i',$time);
-		$deps = self::where('stopID','=',$stopID)->where('dayType','=',$dayType)->where(function($query) use($hour,$minute)
-		{
-			$query->where('hour','=',$hour)->where('minute','>=',$minute)->orWhere('hour','>',$hour);
-		})
-		->orderBy('hour')->orderBy('minute')->limit(5)->get();
-		return $deps;
 	}
 
 	public static function import($url,$dir,$StopID, $LineID,$CityID)

@@ -22,7 +22,10 @@ class RouteServiceProvider extends ServiceProvider {
 	 */
 	public function boot(Router $router)
 	{
-		parent::boot($router);
+		parent::boot($router);		
+        $router->model('city','App\City');
+        $router->model('line','App\Line');
+        $router->model('stop','App\Stop');
 
 		//
 	}
