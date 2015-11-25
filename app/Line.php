@@ -2,7 +2,7 @@
 
 use Illuminate\Database\Eloquent\Model;
 use Goutte\Client;
-use App\Stop;
+
 class Line extends Model {
 	protected $table = 'lines';
 	protected $primaryKey = 'lineID';
@@ -102,5 +102,4 @@ class Line extends Model {
 			return  $model;
 		}
 	}
-
 }

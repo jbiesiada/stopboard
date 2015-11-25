@@ -34,7 +34,6 @@ class Stop extends Model {
 	}
 	public static function import($url,$dir,$LineID,$CityID)
 	{
-		$stop_links = \Cache::get('stop_links'.$LineID.'_'.$CityID);
 		if(empty($stop_links))
 			$stop_links = [];
 		if(!$url)
@@ -44,11 +43,9 @@ class Stop extends Model {
 		$crawler = $client->request('GET', $url);
 		$crawler->filter('a[target="R"]')->each(function($link,$k) use (&$stops,&$stop_links,$dir,$LineID,$CityID){
 			$stop = self::getExistedOrNew(trim($link->text()),$CityID);
-			$stop_links[$stop->stopID][$dir] = $link->link()->getUri();
 			$stop->deps = Departure::import($link->link()->getUri(),$dir,$stop->stopID, $LineID,$CityID);
 			$stops[] = $stop;
 		});		
-		\Cache::put('stop_links'.$LineID.'_'.$CityID,$stop_links,30);
 		return $stops;
 	}
 
@@ -57,7 +54,6 @@ class Stop extends Model {
 		$stop = self::where('name','=',$name)->where('cityID','=',$CityID)->first();
 		if($stop)
 		{
-			// dd($stop);
 			return $stop;
 		}
 		else 
@@ -66,9 +62,7 @@ class Stop extends Model {
 			$stop->name = $name;
 			$stop->cityID = $CityID;
 			$stop->save(); 
-			// dd($stop);
 			return  $stop;
 		}
 	}
-
 }

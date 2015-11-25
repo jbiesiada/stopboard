@@ -1,10 +1,6 @@
 <?php namespace App\Http\Controllers;
 
-use App\Departure;
-use App\Line;
 use App\City;
-use App\Stop;
-use \DateTime;
 
 class MpkController extends Controller {
 

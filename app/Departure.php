@@ -2,8 +2,9 @@
 
 use Illuminate\Database\Eloquent\Model;
 use Goutte\Client;
-use App\SelectedTime;
+
 class Departure extends Model {
+	
 	protected $table = 'departures';
 	protected $primaryKey = 'departureID';
 	public $timestamps = false;
@@ -26,7 +27,7 @@ class Departure extends Model {
 	{
 		$query->where('dayType','=',$time->dayType())->where(function($query) use($time)
 		{
-			$query->where('hour','=',$time->hour())->where('minute','>=',$time->minute())->orWhere('hour','>',$time->hour());
+			$query->where('hour','=',$time->hour())->where('minute','>',$time->minute())->orWhere('hour','>',$time->hour());
 		})->orderBy('hour')->orderBy('minute')->limit(5);	
 	}
 	public function end()
@@ -88,5 +89,4 @@ class Departure extends Model {
 		});
 		return $deps;
 	}
-
 }
